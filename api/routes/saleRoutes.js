@@ -4,15 +4,14 @@ const {
      createSale,
      deleteSale,
 } = require('../controllers/saleController');
-const { protect, admin } = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
 router.route('/')
-     .get(protect, getSales)
-     .post(protect, createSale);
+     .get(getSales)
+     .post(createSale);
 
 router.route('/:id')
-     .delete(protect, admin, deleteSale);
+     .delete(deleteSale);
 
 module.exports = router;
