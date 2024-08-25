@@ -3,8 +3,6 @@ const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 const productRoutes = require('./routes/productRoutes');
-const saleRoutes = require('./routes/saleRoutes');
-const userRoutes = require('./routes/userRoutes');
 const cors = require('cors');
 dotenv.config();
 
@@ -14,14 +12,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use('/api/products', productRoutes);
-app.use('/api/sales', saleRoutes);
-app.use('/api/users', userRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
 app.use(cors({
      origin: 'http://localhost:5173',
-     methods: 'GET,POST',
+     methods: 'GET,POST,PUT,DELETE',
      allowedHeaders: 'Content-Type,Authorization'
 }));
 

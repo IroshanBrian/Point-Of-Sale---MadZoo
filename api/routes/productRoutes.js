@@ -5,15 +5,17 @@ const {
      updateProduct,
      deleteProduct,
 } = require('../controllers/productController');
+const { upload } = require('../middleware/upload');
 
 const router = express.Router();
 
 router.route('/')
      .get(getProducts)
-     .post(createProduct);
+     .post(createProduct)
 
 router.route('/:id')
      .put(updateProduct)
      .delete(deleteProduct);
+
 
 module.exports = router;

@@ -1,64 +1,71 @@
 const Product = require('../models/productModel');
 
-// @desc    Get all products
-// @route   GET /api/products
-// @access  Private
+// Fetch all products
 const getProducts = async (req, res) => {
-     const products = await Product.find({});
-     res.json(products);
-};
-
-// @desc    Create a product
-// @route   POST /api/products
-// @access  Private/Admin
-const createProduct = async (req, res) => {
-     const { name, description, price, quantity } = req.body;
-
-     const product = new Product({
-          name,
-          description,
-          price,
-          quantity
-     });
-
-     const createdProduct = await product.save();
-     res.status(201).json(createdProduct);
-};
-
-// @desc    Update a product
-// @route   PUT /api/products/:id
-// @access  Private/Admin
-const updateProduct = async (req, res) => {
-     const { name, description, price, quantity } = req.body;
-
-     const product = await Product.findById(req.params.id);
-
-     if (product) {
-          product.name = name || product.name;
-          product.description = description || product.description;
-          product.price = price || product.price;
-          product.quantity = quantity || product.quantity;
-
-          const updatedProduct = await product.save();
-          res.json(updatedProduct);
-     } else {
-          res.status(404);
-          throw new Error('Product not found');
+     try {
+          const products = await Product.find({});
+          res.status(200).json(products);
+     } catch (error) {
+          res.status(500).json({ message: 'Error fetching products', error });
      }
 };
 
-// @desc    Delete a product
-// @route   DELETE /api/products/:id
-// @access  Private/Admin
-const deleteProduct = async (req, res) => {
-     const product = await Product.findById(req.params.id);
+const createProduct = async (req, res) => {
+     console.log(req.body);
+     try {
+          const { title, price, stock } = req.body;
 
-     if (product) {
-          await product.remove();
-          res.json({ message: 'Product removed' });
-     } else {
-          res.status(404);
-          throw new Error('Product not found');
+          const newProduct = new Product({
+               title,
+               price,
+               stock,
+          });
+
+          const savedProduct = await newProduct.save();
+          res.status(201).json({ product: savedProduct });
+     } catch (error) {
+          console.error('Error creating product:', error);
+          res.status(500).json({ message: 'Error adding product', error });
+     }
+};
+
+
+
+// Update an existing product
+const updateProduct = async (req, res) => {
+     try {
+          const { title, price, stock, image } = req.body;
+          const product = await Product.findById(req.params.id);
+
+          if (product) {
+               product.title = title || product.title;
+               product.price = price || product.price;
+               product.stock = stock || product.stock;
+               product.image = image || product.image;
+
+               const updatedProduct = await product.save();
+               res.status(200).json({ message: 'Product updated successfully', product: updatedProduct });
+          } else {
+               res.status(404).json({ message: 'Product not found' });
+          }
+     } catch (error) {
+          res.status(500).json({ message: 'Error updating product', error });
+     }
+};
+
+// Delete a product
+const deleteProduct = async (req, res) => {
+     try {
+          const product = await Product.findById(req.params.id);
+
+          if (product) {
+               await product.remove();
+               res.status(200).json({ message: 'Product removed' });
+          } else {
+               res.status(404).json({ message: 'Product not found' });
+          }
+     } catch (error) {
+          res.status(500).json({ message: 'Error removing product', error });
      }
 };
 
@@ -66,5 +73,5 @@ module.exports = {
      getProducts,
      createProduct,
      updateProduct,
-     deleteProduct,
+     deleteProduct
 };
