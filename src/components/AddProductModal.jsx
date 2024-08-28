@@ -5,7 +5,7 @@ const AddProductModal = ({ isOpen, onClose, onAdd }) => {
      const [product, setProduct] = useState({
           title: '',
           price: '',
-          stock: '',
+          stock: ''
      });
 
      if (!isOpen) return null;
@@ -18,14 +18,25 @@ const AddProductModal = ({ isOpen, onClose, onAdd }) => {
      const handleSubmit = async (e) => {
           e.preventDefault();
 
-          try {
-               const response = await createProductWithFormData(product);
+          const formData = new FormData();
+          formData.append('title', product.title);
+          formData.append('price', product.price);
+          formData.append('stock', product.stock);
+
+          const data = await createProductWithFormData(formData); // Send the form data to the server
+
+          if (data) {
+               onAdd(data.product);
+               setProduct({
+                    title: '',
+                    price: '',
+                    stock: ''
+               });
                onClose();
-          } catch (error) {
-               console.error('Failed to add product:', error);
+          } else {
+               console.error('Error adding product');
           }
      };
-
 
      return (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Card from '../Card';
 import AddProductModal from '../AddProductModal';
 import EditProductModal from '../EditProductModel';
-import { fetchProducts } from '../../api/index'
+import { fetchProducts, createProductWithFormData, updateProductWithFormData } from '../../api/index';
 
 const Products = () => {
      const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -11,8 +11,37 @@ const Products = () => {
      const [currentProduct, setCurrentProduct] = useState(null);
 
      useEffect(() => {
-          fetchProducts();
-     }, []);
+          fetchData();
+     }, [isAddModalOpen, isEditModalOpen]);
+
+     const fetchData = async () => {
+          try {
+               const data = await fetchProducts();
+               setProducts(data);
+          } catch (error) {
+               console.error("Failed to fetch products:", error);
+          }
+     };
+
+     const handleAddProduct = async (newProduct) => {
+          try {
+               await createProductWithFormData(newProduct);
+               fetchData();
+               closeAddModal();
+          } catch (error) {
+               console.error("Failed to add product:", error);
+          }
+     };
+
+     const handleEditProduct = async (updatedProduct) => {
+          try {
+               await updateProductWithFormData(updatedProduct);
+               fetchData();
+               closeEditModal();
+          } catch (error) {
+               console.error("Failed to update product:", error);
+          }
+     };
 
      const openAddModal = () => setIsAddModalOpen(true);
      const closeAddModal = () => setIsAddModalOpen(false);
@@ -21,14 +50,6 @@ const Products = () => {
           setIsEditModalOpen(true);
      };
      const closeEditModal = () => setIsEditModalOpen(false);
-
-     const handleAddProduct = (newProduct) => {
-          setProducts([...products, newProduct]);
-     };
-
-     const handleEditProduct = (updatedProduct) => {
-          setProducts(products.map(p => p.id === updatedProduct.id ? updatedProduct : p));
-     };
 
      return (
           <div>
@@ -50,7 +71,6 @@ const Products = () => {
                                    onSave={handleEditProduct}
                                    product={currentProduct}
                                    setProduct={setCurrentProduct}
-                                   mode="edit"
                               />
                          )}
                     </div>
@@ -60,17 +80,16 @@ const Products = () => {
                          {products.map(product => (
                               <Card
                                    key={product.id}
-                                   image={product.image}
                                    title={product.title}
                                    price={product.price}
                                    stock={product.stock}
-                                   onEdit={() => openEditModal(product)}
+                                   onEdit={() => openEditModal(product, product._id)}
                               />
                          ))}
                     </div>
                </div>
           </div>
      );
-}
+};
 
 export default Products;

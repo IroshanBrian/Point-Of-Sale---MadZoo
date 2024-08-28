@@ -4,6 +4,7 @@ const connectDB = require('./config/db');
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 const productRoutes = require('./routes/productRoutes');
 const cors = require('cors');
+
 dotenv.config();
 
 connectDB();
@@ -12,6 +13,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use('/api/products', productRoutes);
+
 
 app.use(notFound);
 app.use(errorHandler);
