@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 const productRoutes = require('./routes/productRoutes');
+const saleRoutes = require('./routes/saleRoutes');
 const cors = require('cors');
 
 dotenv.config();
@@ -13,6 +14,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use('/api/products', productRoutes);
+app.use('/api/sales', saleRoutes);
 
 
 app.use(notFound);

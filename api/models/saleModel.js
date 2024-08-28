@@ -8,6 +8,10 @@ const SaleSchema = new mongoose.Schema({
                total: { type: Number, required: true }
           }
      ],
+     grandTotal: {
+          type: Number,
+          required: true
+     },
      createdDate: { type: Date, default: Date.now },
 });
 

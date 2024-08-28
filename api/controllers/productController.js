@@ -44,7 +44,7 @@ const createProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
      try {
-          const product = await Product.updateOne(
+          const product = await Product.findByIdAndUpdate(
                {
                     _id: req.params.id
                },
@@ -63,7 +63,9 @@ const updateProduct = async (req, res) => {
 
 const deleteProduct = async (req, res) => {
      try {
-          const product = await Product.findById(req.params.id);
+          const product = await Product.findByIdAndDelete({
+               _id: req.params.id
+          });
 
           if (!product) {
                return res.status(404).json({ message: 'Product not found' });
