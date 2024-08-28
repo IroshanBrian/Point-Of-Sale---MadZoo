@@ -23,7 +23,10 @@ const createSale = async (req, res) => {
                if (product.stock < item.quantity) {
                     return res.status(400).json({ message: `Insufficient stock for product ${product.title}` });
                }
+          }
 
+          for (let item of products) {
+               const product = await Product.findById(item.product);
                product.stock -= item.quantity;
                await product.save();
           }
@@ -41,7 +44,6 @@ const createSale = async (req, res) => {
           res.status(500).json({ message: 'Error adding sale', error });
      }
 };
-
 
 
 module.exports = {
