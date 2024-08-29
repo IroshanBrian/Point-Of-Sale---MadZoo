@@ -12,6 +12,16 @@ export const fetchProducts = async () => {
      }
 };
 
+export const fetchSales = async () => {
+     try {
+          const response = await axios.get(`${API_URL}/sales/`);
+          return response.data;
+     } catch (error) {
+          console.log('Failed to fetch products:', error);
+          return [];
+     }
+};
+
 export const fetchProductById = async (id) => {
      try {
           const response = await axios.get(`${API_URL}/products/${id}`);
@@ -22,7 +32,6 @@ export const fetchProductById = async (id) => {
      }
 };
 
-// New function to handle product creation with form data
 export const createProductWithFormData = async (product) => {
      try {
           const response = await axios.post(`${API_URL}/products`, product, {
